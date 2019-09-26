@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View,Button,TouchableOpacity} from 'react-native';
 import { HomeScreen } from './home';
 import {AddReportScreen} from './addReport'
+import {ReportDetailScreen} from './reportDetail'
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator }from 'react-navigation-tabs';
@@ -25,9 +26,12 @@ const AppNavigator = createStackNavigator(
     AddReport: {
       screen: AddReportScreen,
     },
+    ReportDetail: {
+      screen: ReportDetailScreen,
+    },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Home'
   }
 );
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { StyleSheet, View, Text, ScrollView ,Image} from 'react-native'
+import { StyleSheet, View, Text, ScrollView ,Image,TouchableOpacity} from 'react-native'
 import { FloatingAction } from "react-native-floating-action";
 import { Card } from 'react-native-elements'
 
@@ -8,6 +8,7 @@ export class HomeScreen extends Component {
     return (
       <View>
         <ScrollView>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('ReportDetail')}>
         <Card>
             <View style={styles.userInfo}>
             <Image 
@@ -34,6 +35,7 @@ export class HomeScreen extends Component {
               しおみぃしおみぃしおみぃしおみぃしおみぃしおみぃしおみぃしおみぃしおみぃしおみぃしお...
             </Text>
         </Card>
+        </TouchableOpacity>
         <Card>
             <View style={styles.userInfo}>
             <Image 

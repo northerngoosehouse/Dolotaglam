@@ -1,22 +1,25 @@
 import React, {Component} from 'react'
-import { StyleSheet, View, Text, ScrollView ,Image} from 'react-native'
+import { StyleSheet, View, Text, ScrollView ,TextInput, InputAccessoryView,Image} from 'react-native'
 import { FloatingAction } from "react-native-floating-action";
 import { Card } from 'react-native-elements'
 
 export class AddReportScreen extends Component {
   render() {
     return (
-      <View>
+      <View keyboardDismissMode="interactive">
         <ScrollView>
         <Card
             title='Test Card'>
             <Image 
-              source = {{uri:'https://pbs.twimg.com/media/EFT6jOmU4AA7sIl?format=jpg'}}
-              style={styles.image}
+              source = {require('./assets/img/addPhoto.jpg')}
+              style={styles.addImage}
             />
-            <Text style={{flexDirection:'row'}}>
-              しおみぃ…
-            </Text>
+            <TextInput
+              style={{
+                padding: 10,
+                paddingTop: 50,
+              }}
+            />
         </Card>
     </ScrollView>
     </View>
@@ -29,8 +32,10 @@ const styles = StyleSheet.create({
       flex:1,
       height: 500,
     },
-    image: {
+    addImage: {
       height: 300,
-      resizeMode: 'contain'
+      resizeMode: 'contain',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   });

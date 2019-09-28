@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import { StyleSheet, View, Text, ScrollView ,TextInput, InputAccessoryView,Image} from 'react-native'
-import { FloatingAction } from "react-native-floating-action";
 import { Card } from 'react-native-elements'
 
 export class AddReportScreen extends Component {
@@ -11,7 +10,7 @@ export class AddReportScreen extends Component {
         <Card
             title='Test Card'>
             <Image 
-              source = {require('./assets/img/addPhoto.jpg')}
+              source = {require('../assets/img/addPhoto.jpg')}
               style={styles.addImage}
             />
             <TextInput

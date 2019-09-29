@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View,Button,TouchableOpacity} from 'react-native';
 import { HomeScreen } from './Screens/home';
 import {AddReportScreen} from './Screens/addReport'
+import {AddReportInfoScreen} from './Screens/addReportInfo'
 import {ReportDetailScreen} from './Screens/reportDetail'
 import { UserScreen } from './Screens/UserScreen';
 import { SearchScreen } from './Screens/SearchScreen';
@@ -27,6 +28,9 @@ const AppNavigator = createStackNavigator(
     },  
     AddReport: {
       screen: AddReportScreen,
+    },
+    AddReportInfo:{
+      screen: AddReportInfoScreen,
     },
     ReportDetail: {
       screen: ReportDetailScreen,

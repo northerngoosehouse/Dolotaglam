@@ -1,40 +1,62 @@
 import React, {Component} from 'react'
-import { StyleSheet, View, Text, ScrollView ,TextInput, InputAccessoryView,Image} from 'react-native'
-import { Card } from 'react-native-elements'
+import { StyleSheet, View, TextInput, TouchableOpacity} from 'react-native'
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export class AddReportScreen extends Component {
   render() {
     return (
-      <View keyboardDismissMode="interactive">
-        <ScrollView>
-        <Card
-            title='Test Card'>
-            <Image 
-              source = {require('../assets/img/addPhoto.jpg')}
-              style={styles.addImage}
-            />
-            <TextInput
-              style={{
-                padding: 10,
-                paddingTop: 50,
-              }}
-            />
-        </Card>
-    </ScrollView>
-    </View>
+      <View style={styles.container}>
+        <TextInput 
+          style={styles.inputBox}
+          placeholder={"アイドルの名前"}/>
+        <TextInput 
+          style={styles.repoBox}
+          multiline={true}
+          placeholder={"レポ（レポ無しの場合はそのまま次へ）"} />
+        
+        <View style={styles.nextButton}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddReportInfo')}>
+            <Ionicons name="ios-arrow-round-forward" size={40}/>
+          </TouchableOpacity>
+        </View>
+      </View>
  )
 }
 }
 
 const styles = StyleSheet.create({
-    card: {
-      flex:1,
-      height: 500,
+    container:{
+      margin:20,
     },
-    addImage: {
-      height: 300,
-      resizeMode: 'contain',
+    inputRow:{
+      paddingTop:10,
+      flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'center',
     },
+    inputTitle:{
+      width:120,
+      textAlign:"right"
+    },
+    inputBox:{
+      height:40,
+      width:250,
+      // marginLeft:10,
+      borderWidth:0.5,
+      borderRadius:10,
+      borderColor: 'gray'
+    },
+    repoBox:{
+      marginTop:30,
+      height:500,
+      borderWidth:0.5,
+      borderRadius:10,
+      borderColor: 'gray',
+      textAlignVertical: "top"
+    },
+    nextButton:{
+      marginTop:20,
+      marginRight:20,
+      flexDirection: 'row',
+      justifyContent: 'flex-end'
+    }
   });

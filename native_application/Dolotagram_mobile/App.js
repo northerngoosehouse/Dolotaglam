@@ -1,7 +1,10 @@
 import React from 'react';
 import {StyleSheet, Text, View,Button,TouchableOpacity} from 'react-native';
-import { HomeScreen } from './home';
-import {AddReportScreen} from './addReport'
+import { HomeScreen } from './Screens/home';
+import {AddReportScreen} from './Screens/addReport'
+import {ReportDetailScreen} from './Screens/reportDetail'
+import { UserScreen } from './Screens/UserScreen';
+import { SearchScreen } from './Screens/SearchScreen';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator }from 'react-navigation-tabs';
@@ -25,17 +28,26 @@ const AppNavigator = createStackNavigator(
     AddReport: {
       screen: AddReportScreen,
     },
+    ReportDetail: {
+      screen: ReportDetailScreen,
+    },
+    Search: {
+      screen: SearchScreen,
+    },
+    User: {
+      screen: UserScreen,
+    },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Home'
   }
 );
 
 const TabNavigator = createBottomTabNavigator(
   {
       Home: AppNavigator,
-      Search: AddReportScreen,
-      User: AppNavigator,
+      Search: SearchScreen,
+      User:UserScreen,
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -45,27 +57,18 @@ const TabNavigator = createBottomTabNavigator(
         let iconName;
         if (routeName === 'Home') {
           iconName = `ios-home`;
-          // Sometimes we want to add badges to some icons.
-          // You can check the implementation below.
         } else if (routeName === 'Search') {
           iconName = `ios-search`;
         }else if (routeName === 'User') {
           iconName = `ios-contact`;
         }
 
-        // You can return any component that you like here!
         return <IconComponent name={iconName} size={25} color={tintColor} />;
       }
     })
   });
 
 export default createAppContainer(TabNavigator);
-
-// export default class App extends React.Component {
-//   render() {
-//     return <RootStack />;
-//   }
-// }
 
 const styles = StyleSheet.create({
   addButton:{

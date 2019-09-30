@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
-import { StyleSheet, View, Text, ScrollView ,TextInput, InputAccessoryView,Image} from 'react-native'
+import { StyleSheet, View, Text, ScrollView ,TextInput, TouchableOpacity,Image} from 'react-native'
 import { Card } from 'react-native-elements'
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export class UserScreen extends Component {
+export class WelcomeUserInfoScreen extends Component {
   render() {
     return (
       <View keyboardDismissMode="interactive">
@@ -11,7 +12,7 @@ export class UserScreen extends Component {
             title='WelcomeUserName'>
         </Card>
         <View style={styles.nextButton}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddReportInfo')}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
             <Ionicons name="ios-arrow-round-forward" size={40}/>
         </TouchableOpacity>
         </View>

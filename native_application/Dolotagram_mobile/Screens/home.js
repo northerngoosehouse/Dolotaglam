@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import { StyleSheet, View, Text, SafeAreaView ,Image,TouchableOpacity,FlatList} from 'react-native'
 import { FloatingAction } from "react-native-floating-action";
 import { Card } from 'react-native-elements'
+import { AsyncStorage } from "react-native"
 
 export class HomeScreen extends Component {
 
@@ -67,6 +68,8 @@ function Item({
       </Card>
     </TouchableOpacity>
   );
+
+
 }
 
 const DATA = [

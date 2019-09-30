@@ -6,10 +6,12 @@ import {AddReportInfoScreen} from './Screens/addReportInfo'
 import {ReportDetailScreen} from './Screens/reportDetail'
 import { UserScreen } from './Screens/UserScreen';
 import { SearchScreen } from './Screens/SearchScreen';
+import { WelcomeUserNameScreen } from './Screens/welcomeUserName';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator }from 'react-navigation-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { AsyncStorage } from "react-native"
 
 const AppNavigator = createStackNavigator(
   {
@@ -40,6 +42,9 @@ const AppNavigator = createStackNavigator(
     },
     User: {
       screen: UserScreen,
+    },
+    WelcomeUserName:{
+      screen: WelcomeUserNameScreen
     },
   },
   {

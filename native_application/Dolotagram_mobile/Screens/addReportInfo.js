@@ -57,12 +57,12 @@ export class AddReportInfoScreen extends Component {
 
     createJson(){
       const data = {
-        userName:this.state.userName,
-        idolName :this.state.idolName,
-          report : this.state.report,
-          eventDate:this.state.eventDate,
-          eventName:this.state.eventName,
-          imageUrl:this.state.imageUrl
+          "user_id":this.state.userName,
+          "idol_name" :this.state.idolName,
+          "report" : this.state.report,
+          "event_date":this.state.eventDate,
+          "event_name":this.state.eventName,
+          "cheki_url":this.state.imageUrl
       }
       console.log(data)
     }

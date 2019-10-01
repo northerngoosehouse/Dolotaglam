@@ -12,26 +12,6 @@ import { createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator }from 'react-navigation-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-
-const setUserName = async (userName) => {
-  try{
-    await AsyncStorage.setItem('userName',userName);
-  }catch(error){
-    console.log(error);
-  }
-}
-
-const getUserName = async() => {
-  try{
-      await AsyncStorage.getItem('userName')
-        .then((values)=>{
-        this.setState({userName:values});
-        })
-  }catch(error){
-    console.log(error);
-  }
-}
-
 const AppNavigator = createStackNavigator(
   {
     Home: {
@@ -101,14 +81,36 @@ const AppContainer = createAppContainer(TabNavigator);
 export default class App extends React.Component {
   constructor(props){
     super(props)
+    this.getUserName = this.getUserName.bind(this);
+    this.setUserName = this.setUserName.bind(this);
     //userName設定されているかチェック＝初回起動チェック（？）
     this.state={userName:""}
-    getUserName();
+    this.getUserName();
     if(this.state.userName == ""){
       //とりあえずShiomy_shika
-      setUserName('Shiomy_shika')
+      this.setUserName('Shiomy_shika')
     }
   }
+
+  setUserName = async (userName) => {
+    try{
+      await AsyncStorage.setItem('userName',userName);
+    }catch(error){
+      console.log(error);
+    }
+  }
+  
+  getUserName = async() => {
+    try{
+        await AsyncStorage.getItem('userName')
+          .then((values)=>{
+          this.setState({userName:values});
+          })
+    }catch(error){
+      console.log(error);
+    }
+  }
+
   render() {
     return (
       <AppContainer/>

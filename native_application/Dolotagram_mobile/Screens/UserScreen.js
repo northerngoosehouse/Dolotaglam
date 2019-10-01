@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { StyleSheet, View, Text, ScrollView ,TextInput, InputAccessoryView,Image} from 'react-native'
 import { Card } from 'react-native-elements'
+import { AsyncStorage } from "react-native"
 
 export class UserScreen extends Component {
   render() {
@@ -8,12 +9,28 @@ export class UserScreen extends Component {
       <View keyboardDismissMode="interactive">
         <ScrollView>
         <Card
-            title='User'>
+            title={this.state.userName}>
         </Card>
     </ScrollView>
     </View>
- )
+    )
+  }
+
+getUserName = async() => {
+  await AsyncStorage.getItem('userName')
+    .then((values)=>{
+      console.log(values)
+      this.setState({userName:values})
+  });
 }
+
+constructor(props) {
+  super(props);
+  this.state={username:""}
+  this.getUserName = this.getUserName.bind(this);
+  this.getUserName()
+}
+
 }
 
 const styles = StyleSheet.create({

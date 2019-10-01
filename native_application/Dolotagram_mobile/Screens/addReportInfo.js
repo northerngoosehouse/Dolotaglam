@@ -3,6 +3,7 @@ import { StyleSheet, View, TextInput, TouchableOpacity, Text,Image} from 'react-
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
+import { AsyncStorage } from "react-native"
 
 export class AddReportInfoScreen extends Component {
     render() {
@@ -52,36 +53,44 @@ export class AddReportInfoScreen extends Component {
 
     getImage(){
         this.setState({imageUrl:'https://pbs.twimg.com/media/EFKbznkU0AARx6b?format=jpg'});
-        console.log(this.state.idolName)
-        console.log(this.state.report)
     }
 
     createJson(){
       const data = {
-        idolName :this.state.idolName,
-          report : this.state.report,
-          eventDate:this.state.eventDate,
-          eventName:this.state.eventName,
-          imageUrl:this.state.imageUrl
+          "user_id":this.state.userName,
+          "idol_name" :this.state.idolName,
+          "report" : this.state.report,
+          "event_date":this.state.eventDate,
+          "event_name":this.state.eventName,
+          "cheki_url":this.state.imageUrl
       }
       console.log(data)
     }
 
+    getUserName = async() => {
+      await AsyncStorage.getItem('userName')
+        .then((values)=>{
+          console.log(values)
+          this.setState({userName:values})
+      });
+    }
+
     constructor(props) {
         super(props);
+        this.getImage = this.getImage.bind(this);
+        this.createJson = this.createJson.bind(this);
+        this.getUserName = this.getUserName.bind(this);
+
         this.state = { 
-          idolName : [this.props.navigation.state.params.idolName][0][0],
-          report : [this.props.navigation.state.params.report][0][0],
+          idolName : this.props.navigation.state.params.idolName[0],
+          report : this.props.navigation.state.params.report[0],
           eventDate:"",
           eventName:"",
           imageUrl:""
         }
-        this.getImage = this.getImage.bind(this);
-        this.createJson = this.createJson.bind(this);
+        this.getUserName()
     }
 }
-
-
 
 const styles = StyleSheet.create({
     container:{

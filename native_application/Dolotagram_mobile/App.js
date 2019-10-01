@@ -13,7 +13,7 @@ import {createBottomTabNavigator }from 'react-navigation-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AsyncStorage } from "react-native"
 
-storeData = async (userName) => {
+setData = async (userName) => {
   try{
     await AsyncStorage.setItem('userName',userName);
   }catch(error){
@@ -98,7 +98,29 @@ const TabNavigator = createBottomTabNavigator(
     })
   });
 
-export default createAppContainer(TabNavigator);
+// export default function render(){
+//   let value = AsyncStorage.getItem('userName');
+//   if(value == null){
+//     setData('Shiomy_shika')
+//   }
+//   return createAppContainer(TabNavigator);
+// };
+const AppContainer = createAppContainer(TabNavigator);
+
+export default class App extends React.Component {
+  constructor(props){
+    super(props)
+    let value = AsyncStorage.getItem('userName');
+    if(value == null){
+      setData('Shiomy_shika')
+    }
+  }
+  render() {
+    return (
+      <AppContainer/>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   addButton:{

@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { StyleSheet, View, Text, ScrollView ,TextInput, InputAccessoryView,Image} from 'react-native'
 import { Card } from 'react-native-elements'
+import { AsyncStorage } from "react-native"
 
 export class UserScreen extends Component {
   render() {
@@ -8,7 +9,7 @@ export class UserScreen extends Component {
       <View keyboardDismissMode="interactive">
         <ScrollView>
         <Card
-            title='User'>
+            title={this.props.navigation.state.params.username}>
         </Card>
     </ScrollView>
     </View>

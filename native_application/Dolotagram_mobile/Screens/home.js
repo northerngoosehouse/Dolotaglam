@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import { StyleSheet, View, Text, SafeAreaView ,Image,TouchableOpacity,FlatList} from 'react-native'
 import { FloatingAction } from "react-native-floating-action";
 import { Card } from 'react-native-elements'
-import { AsyncStorage } from "react-native"
 
 export class HomeScreen extends Component {
 
@@ -19,7 +18,7 @@ export class HomeScreen extends Component {
             imageUrl={item.imageUrl}
             registerDate={item.registerDate}
             reportData={item.reportData}
-            reportSummary={item.reportSummary}
+            report={item.report}
             props={this.props}
             />}
         keyExtractor={item => item.id}
@@ -36,8 +35,9 @@ function Item({
   imageUrl,
   registerDate,
   reportData,
-  reportSummary,
+  report,
   props}) {
+    let reportSummary = String(report).slice(0,30)
   return (
     <TouchableOpacity onPress={() => props.navigation.navigate('ReportDetail')}>
       <Card>

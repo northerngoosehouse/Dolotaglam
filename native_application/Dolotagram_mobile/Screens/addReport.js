@@ -3,19 +3,37 @@ import { StyleSheet, View, TextInput, TouchableOpacity} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export class AddReportScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state={
+      idolName:"",
+      report:""
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <TextInput 
           style={styles.inputBox}
-          placeholder={"アイドルの名前"}/>
+          placeholder={"アイドルの名前"}
+          name="idolName"
+          onChangeText = {(value) => this.setState({idolName: value})}
+          />
         <TextInput 
           style={styles.repoBox}
           multiline={true}
+          name="report"
+          onChangeText = {(value) => this.setState({report: value})}
           placeholder={"レポ（レポ無しの場合はそのまま次へ）"} />
         
         <View style={styles.nextButton}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddReportInfo')}>
+          <TouchableOpacity onPress={() => 
+            this.props.navigation.navigate('AddReportInfo',
+            {
+              idolName:[this.state.idolName],
+              report:[this.state.report]
+            })}>
             <Ionicons name="ios-arrow-round-forward" size={40}/>
           </TouchableOpacity>
         </View>

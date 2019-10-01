@@ -10,9 +10,11 @@ export class AddReportInfoScreen extends Component {
           <View style={styles.container}>
             <TextInput 
               style={styles.inputBox}
+              onChangeText = {(value) => this.setState({eventDate: value})}
               placeholder={"イベント日"}/>
             <TextInput 
               style={styles.inputBox}
+              onChangeText = {(value) => this.setState({eventName:value})}
               placeholder={"イベント名"}/>
         
             <TouchableOpacity onPress={() => this.props.navigation.navigate('AddReport')}>
@@ -35,23 +37,47 @@ export class AddReportInfoScreen extends Component {
             />
 
             <View style={styles.nextButton}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
+              <TouchableOpacity onPress={() => {
+                this.createJson()
+                this.props.navigation.navigate('Home')
+                }}>
                 <Feather name="upload" size={40}/>
               </TouchableOpacity>
             </View>
-
+            <Text>{this.state.idolName}</Text>
+            <Text>{this.state.report}</Text>
           </View>
      )
     }
 
     getImage(){
         this.setState({imageUrl:'https://pbs.twimg.com/media/EFKbznkU0AARx6b?format=jpg'});
+        console.log(this.state.idolName)
+        console.log(this.state.report)
+    }
+
+    createJson(){
+      const data = {
+        idolName :this.state.idolName,
+          report : this.state.report,
+          eventDate:this.state.eventDate,
+          eventName:this.state.eventName,
+          imageUrl:this.state.imageUrl
+      }
+      console.log(data)
     }
 
     constructor(props) {
         super(props);
-        this.state = { tenki : "" };
+        this.state = { 
+          idolName : [this.props.navigation.state.params.idolName][0][0],
+          report : [this.props.navigation.state.params.report][0][0],
+          eventDate:"",
+          eventName:"",
+          imageUrl:""
+        }
         this.getImage = this.getImage.bind(this);
+        this.createJson = this.createJson.bind(this);
     }
 }
 

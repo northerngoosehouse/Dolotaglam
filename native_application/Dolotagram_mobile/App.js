@@ -69,7 +69,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: this.getData()
+    initialRouteName: "Home"
   }
 );
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View,Button,TouchableOpacity} from 'react-native';
+import {StyleSheet,TouchableOpacity,AsyncStorage} from 'react-native';
 import { HomeScreen } from './Screens/home';
 import {AddReportScreen} from './Screens/addReport'
 import {AddReportInfoScreen} from './Screens/addReportInfo'
@@ -11,9 +11,9 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator }from 'react-navigation-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { AsyncStorage } from "react-native"
 
-setData = async (userName) => {
+
+const setUserName = async (userName) => {
   try{
     await AsyncStorage.setItem('userName',userName);
   }catch(error){
@@ -21,14 +21,12 @@ setData = async (userName) => {
   }
 }
 
-getData = async () => {
+const getUserName = async() => {
   try{
-    const value = await AsyncStorage.getItem('userName');
-    if(value !== null){
-      return 'Home'
-    }else{
-      return 'WelcomeUserInfo'
-    }
+      await AsyncStorage.getItem('userName')
+        .then((values)=>{
+        this.setState({userName:values});
+        })
   }catch(error){
     console.log(error);
   }
@@ -40,6 +38,7 @@ const AppNavigator = createStackNavigator(
       screen: HomeScreen,
       navigationOptions: ({ navigation }) => {
         const { navigate } = navigation
+        //ヘッダエリアに「＋」ボタンを設定
         return {
           headerTitle: 'Dolotagram',
           headerRight: 
@@ -92,27 +91,22 @@ const TabNavigator = createBottomTabNavigator(
         }else if (routeName === 'User') {
           iconName = `ios-contact`;
         }
-
         return <IconComponent name={iconName} size={25} color={tintColor} />;
       }
     })
   });
 
-// export default function render(){
-//   let value = AsyncStorage.getItem('userName');
-//   if(value == null){
-//     setData('Shiomy_shika')
-//   }
-//   return createAppContainer(TabNavigator);
-// };
 const AppContainer = createAppContainer(TabNavigator);
 
 export default class App extends React.Component {
   constructor(props){
     super(props)
-    let value = AsyncStorage.getItem('userName');
-    if(value == null){
-      setData('Shiomy_shika')
+    //userName設定されているかチェック＝初回起動チェック（？）
+    this.state={userName:""}
+    getUserName();
+    if(this.state.userName == ""){
+      //とりあえずShiomy_shika
+      setUserName('Shiomy_shika')
     }
   }
   render() {
@@ -121,14 +115,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  addButton:{
-    height:30,
-    width:30,
-    borderRadius:15,
-    backgroundColor: 'white',
-    color:'black',
-    marginRight:10
-  },
-});

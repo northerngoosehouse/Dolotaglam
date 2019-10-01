@@ -1,16 +1,21 @@
 import React, {Component} from 'react'
 import { StyleSheet, View, Text, SafeAreaView ,Image,TouchableOpacity,FlatList} from 'react-native'
-import { FloatingAction } from "react-native-floating-action";
 import { Card } from 'react-native-elements'
 import { AsyncStorage } from "react-native"
 
 export class HomeScreen extends Component {
   constructor(props) {
     super(props);
-    userName = AsyncStorage.getItem('userName');
-    this.state={
-      username:[userName]
-    }
+    this.getUserName = this.getUserName.bind(this);
+    this.state={userName:""}
+    this.getUserName()
+  }
+
+  getUserName = async() => {
+    await AsyncStorage.getItem('userName')
+      .then((values)=>{
+        this.setState({userName:values})
+    });
   }
 
   render() {
@@ -41,11 +46,11 @@ function Item({
   userIconUrl,
   idolName,
   imageUrl,
-  registerDate,
   reportData,
   report,
   props}) {
-    let reportSummary = String(report).slice(0,30)
+  //レポからリストに表示するサマリを作成
+  let reportSummary = String(report).slice(0,30)
   return (
     <TouchableOpacity onPress={() => props.navigation.navigate('ReportDetail')}>
       <Card>
@@ -76,11 +81,9 @@ function Item({
       </Card>
     </TouchableOpacity>
   );
-
-
-
 }
 
+//とりあえず仮データ
 const DATA = [
   {
     id: '1',

@@ -18,7 +18,7 @@ export class HomeScreen extends Component {
             imageUrl={item.imageUrl}
             registerDate={item.registerDate}
             reportData={item.reportData}
-            reportSummary={item.reportSummary}
+            report={item.report}
             props={this.props}
             />}
         keyExtractor={item => item.id}
@@ -35,8 +35,9 @@ function Item({
   imageUrl,
   registerDate,
   reportData,
-  reportSummary,
+  report,
   props}) {
+    let reportSummary = String(report).slice(0,30)
   return (
     <TouchableOpacity onPress={() => props.navigation.navigate('ReportDetail')}>
       <Card>
@@ -67,6 +68,8 @@ function Item({
       </Card>
     </TouchableOpacity>
   );
+
+
 }
 
 const DATA = [

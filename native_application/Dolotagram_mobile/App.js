@@ -6,10 +6,33 @@ import {AddReportInfoScreen} from './Screens/addReportInfo'
 import {ReportDetailScreen} from './Screens/reportDetail'
 import { UserScreen } from './Screens/UserScreen';
 import { SearchScreen } from './Screens/SearchScreen';
+import { WelcomeUserInfoScreen } from './Screens/welcomeUserInfo';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator }from 'react-navigation-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { AsyncStorage } from "react-native"
+
+storeData = async (userName) => {
+  try{
+    await AsyncStorage.setItem('userName',userName);
+  }catch(error){
+    console.log(error);
+  }
+}
+
+getData = async () => {
+  try{
+    const value = await AsyncStorage.getItem('userName');
+    if(value !== null){
+      return 'Home'
+    }else{
+      return 'WelcomeUserInfo'
+    }
+  }catch(error){
+    console.log(error);
+  }
+}
 
 const AppNavigator = createStackNavigator(
   {
@@ -41,9 +64,12 @@ const AppNavigator = createStackNavigator(
     User: {
       screen: UserScreen,
     },
+    WelcomeUserInfo:{
+      screen: WelcomeUserInfoScreen
+    },
   },
   {
-    initialRouteName: 'Home'
+    initialRouteName: "Home"
   }
 );
 

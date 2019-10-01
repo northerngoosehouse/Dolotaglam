@@ -4,6 +4,21 @@ import { Card } from 'react-native-elements'
 import { AsyncStorage } from "react-native"
 
 export class UserScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state={username:""}
+    this.getUserName = this.getUserName.bind(this);
+    this.getUserName()
+  }
+
+  getUserName = async() => {
+    await AsyncStorage.getItem('userName')
+      .then((values)=>{
+        console.log(values)
+        this.setState({userName:values})
+    });
+  }
+
   render() {
     return (
       <View keyboardDismissMode="interactive">
@@ -15,22 +30,6 @@ export class UserScreen extends Component {
     </View>
     )
   }
-
-getUserName = async() => {
-  await AsyncStorage.getItem('userName')
-    .then((values)=>{
-      console.log(values)
-      this.setState({userName:values})
-  });
-}
-
-constructor(props) {
-  super(props);
-  this.state={username:""}
-  this.getUserName = this.getUserName.bind(this);
-  this.getUserName()
-}
-
 }
 
 const styles = StyleSheet.create({

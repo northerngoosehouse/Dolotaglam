@@ -64,7 +64,6 @@ export class AddReportInfoScreen extends Component {
           "event_name":this.state.eventName,
           "cheki_url":this.state.imageUrl
       }
-      console.log(data)
     }
 
     getUserName = async() => {

@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, ScrollView ,TextInput, TouchableOpacity,Image} 
 import { Card } from 'react-native-elements'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+//初回起動時に表示したい。
 export class WelcomeUserInfoScreen extends Component {
   render() {
     return (

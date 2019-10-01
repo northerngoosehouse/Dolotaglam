@@ -9,12 +9,28 @@ export class UserScreen extends Component {
       <View keyboardDismissMode="interactive">
         <ScrollView>
         <Card
-            title={this.props.navigation.state.params.username}>
+            title={this.state.userName}>
         </Card>
     </ScrollView>
     </View>
- )
+    )
+  }
+
+getUserName = async() => {
+  await AsyncStorage.getItem('userName')
+    .then((values)=>{
+      console.log(values)
+      this.setState({userName:values})
+  });
 }
+
+constructor(props) {
+  super(props);
+  this.state={username:""}
+  this.getUserName = this.getUserName.bind(this);
+  this.getUserName()
+}
+
 }
 
 const styles = StyleSheet.create({

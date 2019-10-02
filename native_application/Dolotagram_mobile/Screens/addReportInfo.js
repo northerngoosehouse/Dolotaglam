@@ -33,7 +33,7 @@ export class AddReportInfoScreen extends Component {
         "event_name":this.state.eventName,
         "cheki_url":this.state.imageUrl
     })
-    console.log(data)
+    uploadReport(data)
   }
 
   render() {
@@ -88,6 +88,24 @@ const getUserName = async() => {
 
 const getImageUrl = () => {
   return 'https://pbs.twimg.com/media/EFKbznkU0AARx6b?format=jpg'
+}
+
+const uploadReport = (data) =>{
+  const JsonRpcBody =  JSON.stringify({
+    "jsonrpc": "2.0", 
+    "method": "K.SaveCard", 
+    "params": data, 
+    "id": 1
+  })
+
+  fetch('http://hogehoge.com', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JsonRpcBody
+    });
 }
 const styles = StyleSheet.create({
     container:{

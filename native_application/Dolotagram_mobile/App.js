@@ -7,6 +7,7 @@ import {ReportDetailScreen} from './Screens/reportDetail'
 import { UserScreen } from './Screens/UserScreen';
 import { SearchScreen } from './Screens/SearchScreen';
 import { WelcomeUserInfoScreen } from './Screens/welcomeUserInfo';
+import { AddCardScreen} from './Screens/addCard'
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator }from 'react-navigation-tabs';
@@ -22,7 +23,7 @@ const AppNavigator = createStackNavigator(
         return {
           headerTitle: 'Dolotagram',
           headerRight: 
-          <TouchableOpacity onPress={() => navigate('AddReport')}>
+          <TouchableOpacity onPress={() => navigate('AddCard')}>
             <Ionicons name="ios-add" style={{marginRight:10}} size={40}/>
           </TouchableOpacity>
         }
@@ -46,6 +47,9 @@ const AppNavigator = createStackNavigator(
     WelcomeUserInfo:{
       screen: WelcomeUserInfoScreen
     },
+    AddCard:{
+      screen:AddCardScreen
+    }
   },
   {
     initialRouteName: "Home"

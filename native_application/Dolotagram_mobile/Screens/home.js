@@ -7,8 +7,19 @@ export class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.getUserName = this.getUserName.bind(this);
+    this.getCard = this.getCard.bind(this);
+    this.initialList = this.initialList.bind(this);
     this.state={userName:""}
-    this.getUserName()
+    this.initialList()
+  }
+
+  componentWillMount = () =>{
+    this.initialList()
+  }
+
+  initialList = async() => {
+    await this.getUserName()
+    await this.getCard(this.state.userName)
   }
 
   getUserName = async() => {
@@ -17,6 +28,32 @@ export class HomeScreen extends Component {
         this.setState({userName:values})
     });
   }
+
+  getCard = async(userName) => {
+    const JsonRpcBody =  JSON.stringify({
+      "jsonrpc": "2.0", 
+      "method": "K.GetAllCard", 
+      "params": {"user_id":userName}, 
+      "id": "1"
+    })
+    this.setState({loading:true})
+    await fetch('https://m-dot-dolotagram-254717.appspot.com/jrpc', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JsonRpcBody
+      }).then(response => {
+          return response.json();
+        }).then(jsonData => {
+          console.log('jsonData:', jsonData); 
+          this.setState({loading:false})
+      }).catch(error => {
+      console.log(error)
+      this.setState({loading:false})
+      })
+    }
 
   render() {
     return (

@@ -1,0 +1,12 @@
+module k_server
+
+go 1.12
+
+require (
+	cloud.google.com/go v0.46.1 // indirect
+	cloud.google.com/go/datastore v1.0.0
+	github.com/intel-go/fastjson v0.0.0-20170329170629-f846ae58a1ab
+	github.com/osamingo/jsonrpc v0.0.0-20190911131313-351ceaa6f6f8
+	go.mercari.io/datastore v1.6.1
+	google.golang.org/api v0.10.0 // indirect
+)

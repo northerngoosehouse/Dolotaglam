@@ -1,74 +1,77 @@
 package dao
 
 import (
-	"m_server/models"
-	"cloud.google.com/go/firestore"
+	cdatastore "cloud.google.com/go/datastore"
 	"context"
-	firebase "firebase.google.com/go"
-	"google.golang.org/api/iterator"
+	"go.mercari.io/datastore"
+	"go.mercari.io/datastore/clouddatastore"
 	"log"
+	"m_server/models"
+	"strconv"
 )
 
 type CardDao struct {
 	Ctx    context.Context
-	Client *firestore.Client
+	Client datastore.Client
 }
 
 func NewCardDao() (*CardDao, error) {
-	cardDao := new(CardDao)
+		ctx := context.Background()
 
-	ctx := context.Background()
-	conf := &firebase.Config{ProjectID: "todo-management-line-bot"}
-	app, err := firebase.NewApp(ctx, conf)
+	dsClient, err := cdatastore.NewClient(ctx, "dolotagram-254717")
 	if err != nil {
-		log.Printf("%s", err.Error())
-		return &CardDao{}, err
+		log.Printf("[fail] failed create cloud datastore client")
+		return nil, err
 	}
 
-	client, err := app.Firestore(ctx)
+	client, err := clouddatastore.FromClient(ctx, dsClient)
 	if err != nil {
-		log.Printf("%s", err.Error())
-		return &CardDao{}, nil
+		log.Printf("[fail] failed create client for cloud datastore")
+		return nil, err
 	}
-	// defer client.Close()
 
+	var cardDao CardDao
 	cardDao.Ctx = ctx
 	cardDao.Client = client
 
-	return cardDao, nil
+	return &cardDao, nil
 }
 
 func (dao *CardDao) Get(cardId string) (models.Card, error) {
-	cardRef, err := dao.Client.Collection("card").Doc(cardId).Get(dao.Ctx)
-	if err != nil {
-		return models.Card{}, err
-	}
-	rowUser := cardRef.Data()
-	log.Printf("Document data: %#v\n", rowUser)
+	log.Printf("[start Mserver] cdao get")
+	defer log.Printf("[end Mserver] cdao get")
 
-	card, err := models.Map2CardStruct(rowUser)
+	cardIdInt, err := strconv.ParseInt(cardId, 10, 64)
 	if err != nil {
+		log.Printf("[fail] failed strconv a to i")
 		return models.Card{}, err
 	}
-	return card, nil
+	key := dao.Client.IDKey("card", cardIdInt, nil)
+
+	var card models.Card
+	err = dao.Client.Get(dao.Ctx, key, &card)
+	if err != nil {
+		log.Printf("[fail] failed get card from datastore : %s", err.Error())
+		return models.Card{},err
+	}
+	card.Id = cardId
+	return card, err
 }
 
 func (dao *CardDao) GetAll(userId string) ([]models.Card, error) {
-	ctx := context.Background()
+	log.Printf("[start] card getAll")
+	defer log.Printf("[end Mserver] card getAll")
+
+	query := dao.Client.NewQuery("card").Filter("UserId = ", userId)
 
 	var cards []models.Card
-	iter := dao.Client.Collection("card").Where("userId", "==", userId).Documents(ctx)
-	for {
-		doc, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			return nil, err
-		}
-		card, err := models.Map2CardStruct(doc.Data())
-		cards = append(cards, card)
+	keys, err := dao.Client.GetAll(dao.Ctx, query, &cards)
+	if err != nil {
+		log.Printf("[fail] failed get all card from datastore : %s", err.Error())
+		return nil, err
 	}
-
+	for i, key := range keys {
+		cards[i].Id = key.String()
+	}
 	return cards, nil
 }

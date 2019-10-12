@@ -1,24 +1,22 @@
 package handler
 
 import (
-	"m_server/dao"
-	"m_server/models"
 	"context"
 	"github.com/intel-go/fastjson"
 	"github.com/osamingo/jsonrpc"
 	"log"
-	"net/http"
+	"m_server/dao"
+	"m_server/models"
 )
 
 type(
 	GetAllCardHandler struct {}
 	GetAllCardParams struct {
-		userId string
+		UserId string `json:"user_id"`
 	}
 	GetAllCardResult struct {
-		status int
-		cards []models.Card
-		message string
+		Cards []models.Card `json:"cards"`
+		Message string `json:"message"`
 	}
 )
 
@@ -26,20 +24,21 @@ func (h GetAllCardHandler) ServeJSONRPC(ctx context.Context, params *fastjson.Ra
 	var cp GetAllCardParams
 	if err := jsonrpc.Unmarshal(params, &cp); err != nil {
 		log.Print("[fail] failed unmarshal data")
-		return GetAllCardResult{status: http.StatusBadRequest, cards: []models.Card{}, message: "failed unmarshal data"}, err
+		return GetAllCardResult{Cards: []models.Card{}, Message: "failed unmarshal data"}, err
 	}
 
 	cDao, err := dao.NewCardDao()
 	if err != nil {
 		log.Printf("[fail] failed create card dao")
-		return GetAllCardResult{status: http.StatusInternalServerError, cards: []models.Card{}, message: "failed unmarshal data"}, nil
+		return GetAllCardResult{Cards: []models.Card{}, Message: "failed unmarshal data"}, nil
 	}
+	defer cDao.Client.Close()
 
-	cards, err := cDao.GetAll(cp.userId)
+	cards, err := cDao.GetAll(cp.UserId)
 	if err != nil {
 		log.Print("[fail] failed get all cards from datastore")
-		return GetAllCardResult{status: http.StatusInternalServerError, cards: []models.Card{}, message: "failed get cards from datastore"}, nil
+		return GetAllCardResult{Cards: []models.Card{}, Message: "failed get cards from datastore"}, nil
 	}
 
-	return GetAllCardResult{status: http.StatusOK, cards: cards, message: "complete"}, nil
+	return GetAllCardResult{Cards: cards, Message: "complete"}, nil
 }

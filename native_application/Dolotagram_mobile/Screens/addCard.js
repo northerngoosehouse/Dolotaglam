@@ -45,15 +45,12 @@ export class AddCardScreen extends Component{
     }
     
     messageDialog = (id) => {
-        console.log('messageDialog')
         this.deleteMessage(id)
     }
     
     deleteMessage=(id)=>{
-        console.log(id)
         const previousReport = this.state.report
         const newReport = previousReport.filter(function(item){
-            console.log('item.id:'+item.id)
             return item.id !== id;
         })
         this.setState({report:newReport})
@@ -105,7 +102,6 @@ export class AddCardScreen extends Component{
 
     //消えてるけど、すぐに消えてくれない。
     deleteImage(){
-        console.log('deleteImage')
         this.setState({ imageUrl: "" });
     }
 
@@ -128,7 +124,6 @@ export class AddCardScreen extends Component{
             {id:id,message:sentence, speaker:speaker}
         )
         this.setState({report:report})
-        console.log(report)
         this.setState({sentence:""})
     }
 
@@ -140,17 +135,18 @@ export class AddCardScreen extends Component{
             moment(new Date(eventDate_arr[0],eventDate_arr[1],eventDate_arr[2])).format('YYYY-MM-DD')
         const imageBase64 = (this.state.imageUrl === "") ? "" :
             await ImageManipulator.manipulateAsync(this.state.imageUrl,
-                [{rotate:360}],{format:ImageManipulator.SaveFormat.JPEG,base64:true}).base64
+                [{rotate:360}],{format:ImageManipulator.SaveFormat.JPEG,base64:true})
+                .then(value => {return value.base64})
+                
         const data = {
             "user_id":userName,
             // "idol_name" :this.state.idolName,
-            "report" : this.state.report,
-            "event_date":eventDate,
-            "created_at": now,
+            "report" : "テスト用",
+            "event_date":"2014-08-25T00:00:00+09:00",
+            "created_at": "2014-08-25T00:00:00+09:00",
             // "event_name":this.state.eventName,
-            "cheki_url": imageBase64.base64
+            "cheki_url": imageBase64
         }
-        console.log(data)
         this.uploadReport(data)
       }
     
@@ -161,7 +157,6 @@ export class AddCardScreen extends Component{
           "params": data, 
           "id": "1"
         })
-        console.log(JsonRpcBody)
         this.setState({loading:true})
         fetch('https://k-dot-dolotagram-254717.appspot.com/jrpc', {
             method: 'POST',
@@ -173,11 +168,11 @@ export class AddCardScreen extends Component{
           }).then(response => {
               return response.json();
             }).then(jsonData => {
-              console.log('jsonData:', jsonData); 
+              console.log(jsonData.result.message)
               this.setState({loading:false})
               this.props.navigation.navigate('Home')
           }).catch(error => {
-          console.log(error)
+          console.log(error.message)
           this.setState({loading:false})
           this.props.navigation.navigate('Home')
         })

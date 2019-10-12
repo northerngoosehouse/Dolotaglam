@@ -3,6 +3,7 @@ import { ActivityIndicator ,StyleSheet,FlatList, View, TextInput, TouchableOpaci
 import Modal from "react-native-modal";
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
+import * as ImageManipulator from 'expo-image-manipulator';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -10,7 +11,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import { SegmentedControlIOS } from "react-native";
 import { AsyncStorage } from "react-native"
 import {KeyboardAvoidingView} from 'react-native';
-import { AuthSession } from 'expo';
+import moment from "moment";
 
 export class AddCardScreen extends Component{
     constructor(props) {
@@ -133,9 +134,13 @@ export class AddCardScreen extends Component{
 
     createJSON = async()=>{
         const userName = await getUserName()
-        const now = new Date()
-        const eventDate_arr = this.state.eventDate.split('/')
-        const eventDate = new Date(eventDate_arr[0],eventDate_arr[1],eventDate_arr[2])
+        const now = moment(new Date()).format('YYYY-MM-DD-HH-mm-ss')
+        const eventDate_arr = (this.state.eventDate === null) ? "" : this.state.eventDate.split('/')
+        const eventDate = (this.state.eventDate === null) ? "" : 
+            moment(new Date(eventDate_arr[0],eventDate_arr[1],eventDate_arr[2])).format('YYYY-MM-DD')
+        const imageBase64 = (this.state.imageUrl === "") ? "" :
+            await ImageManipulator.manipulateAsync(this.state.imageUrl,
+                [{rotate:360}],{format:ImageManipulator.SaveFormat.JPEG,base64:true}).base64
         const data = {
             "user_id":userName,
             // "idol_name" :this.state.idolName,
@@ -143,8 +148,9 @@ export class AddCardScreen extends Component{
             "event_date":eventDate,
             "created_at": now,
             // "event_name":this.state.eventName,
-            "cheki_url": this.state.imageUrl
+            "cheki_url": imageBase64.base64
         }
+        console.log(data)
         this.uploadReport(data)
       }
     

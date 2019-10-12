@@ -111,8 +111,9 @@ export class AddCardScreen extends Component{
     createJSON = async()=>{
         const userName = await getUserName()
         const now = moment(new Date()).format('YYYY-MM-DD-HH-mm-ss')
-        const eventDate_arr = this.state.eventDate.split('/')
-        const eventDate = moment(new Date(eventDate_arr[0],eventDate_arr[1],eventDate_arr[2])).format('YYYY-MM-DD')
+        const eventDate_arr = (this.state.eventDate === null) ? "" : this.state.eventDate.split('/')
+        const eventDate = (this.state.eventDate === null) ? "" : 
+            moment(new Date(eventDate_arr[0],eventDate_arr[1],eventDate_arr[2])).format('YYYY-MM-DD')
         const imageBase64 = (this.state.imageUrl === "") ? "" :
             await ImageManipulator.manipulateAsync(this.state.imageUrl,
                 [{rotate:360}],{format:ImageManipulator.SaveFormat.JPEG,base64:true}).base64

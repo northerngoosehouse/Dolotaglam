@@ -9,7 +9,10 @@ export class HomeScreen extends Component {
     this.getUserName = this.getUserName.bind(this);
     this.getCard = this.getCard.bind(this);
     this.initialList = this.initialList.bind(this);
-    this.state={userName:""}
+    this.state={
+        serName:"",
+        cardListJSON:[]
+        }
     this.initialList()
   }
 
@@ -48,6 +51,8 @@ export class HomeScreen extends Component {
           return response.json();
         }).then(jsonData => {
           console.log('jsonData:', jsonData); 
+          console.log('cards:' + jsonData.result.cards)
+          this.setState({cardListJSON:jsonData.result.cards})
           this.setState({loading:false})
       }).catch(error => {
       console.log(error)
@@ -59,15 +64,15 @@ export class HomeScreen extends Component {
     return (
       <SafeAreaView>
       <FlatList
-        data={DATA}
+        data={this.state.cardListJSON}
         renderItem={({ item }) => 
           <Item 
-            userName={item.userName}
-            userIconUrl={item.userIconUrl}
-            idolName={item.idolName}
-            imageUrl={item.imageUrl}
-            registerDate={item.registerDate}
-            reportData={item.reportData}
+            user_id={item.user_id}
+            userIconUrl=""
+            idolName=""
+            cheki_url={item.cheki_url}
+            created_at={item.created_at}
+            event_date={item.event_date}
             report={item.report}
             props={this.props}
             />}
@@ -79,15 +84,15 @@ export class HomeScreen extends Component {
 }
 
 function Item({ 
-  userName,
+  user_id,
   userIconUrl,
   idolName,
-  imageUrl,
-  reportData,
+  cheki_url,
+  event_date,
   report,
   props}) {
   //レポからリストに表示するサマリを作成
-  let reportSummary = String(report).slice(0,30)
+  const reportSummary = (report.length > 30 ) ? String(report).slice(0,30) : report
   return (
     <TouchableOpacity onPress={() => props.navigation.navigate('ReportDetail')}>
       <Card>
@@ -97,7 +102,7 @@ function Item({
             style={styles.icon}
           />
           <Text style={styles.username}>
-            {userName}
+            {user_id}
           </Text>
           </View>
           <View style={styles.repoInfo}>
@@ -105,11 +110,11 @@ function Item({
             vs {idolName}
           </Text>
           <Text style={styles.date}>
-            {reportData}
+            {event_date}
           </Text>
           </View>
           <Image 
-            source = {{uri:imageUrl}}
+            source = {{uri:cheki_url}}
             style={styles.image}
           />
           <Text style={styles.repoSummary}>

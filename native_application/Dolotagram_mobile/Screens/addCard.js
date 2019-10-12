@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { ActivityIndicator ,StyleSheet, View, TextInput, TouchableOpacity, Text,Image,Button, ScrollView} from 'react-native'
+import { ActivityIndicator ,StyleSheet,FlatList, View, TextInput, TouchableOpacity, Text,Image,Button, ScrollView} from 'react-native'
 import Modal from "react-native-modal";
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
@@ -25,7 +25,9 @@ export class AddCardScreen extends Component{
         this.deleteImage = this.deleteImage.bind(this)
         this.addSentence = this.addSentence.bind(this)
         this.createJSON = this.createJSON.bind(this)
-    this.uploadReport = this.uploadReport.bind(this)
+        this.uploadReport = this.uploadReport.bind(this)
+        this.messageDialog = this.messageDialog.bind(this)
+        this.deleteMessage = this.deleteMessage.bind(this)
         this.state={
             hasCameraRollPermission:null,
             hasCameraPermission:null,
@@ -37,9 +39,24 @@ export class AddCardScreen extends Component{
             eventName:"",
             selectedIndex:0,
             sentence:"",
-            report:"",
+            report:[],
             loading:false,
         }
+    }
+    
+    messageDialog = (id) => {
+        console.log('messageDialog')
+        this.deleteMessage(id)
+    }
+    
+    deleteMessage=(id)=>{
+        console.log(id)
+        const previousReport = this.state.report
+        const newReport = previousReport.filter(function(item){
+            console.log('item.id:'+item.id)
+            return item.id !== id;
+        })
+        this.setState({report:newReport})
     }
 
     openReportModal() {
@@ -69,7 +86,6 @@ export class AddCardScreen extends Component{
           this.setState({ hasCameraRollPermission: status === 'granted' });
         }
         let result = await ImagePicker.launchCameraAsync();
-        console.log(result);
         if(result.cancelled === false){
             this.setState({ imageUrl: result.uri });
         }
@@ -82,7 +98,6 @@ export class AddCardScreen extends Component{
           this.setState({ hasCameraRollPermission: status === 'granted' });
         }
         let result = await ImagePicker.launchImageLibraryAsync();
-        console.log(result);
         if(result.cancelled === false){
             this.setState({ imageUrl: result.uri });
         }
@@ -96,15 +111,24 @@ export class AddCardScreen extends Component{
 
     addSentence(){
         const input = this.state.sentence
+        const speaker = this.state.selectedIndex
         if(this.state.selectedIndex === 0){
-            var sentence = 'アイドル「' + input + '」\n\n'
+            var sentence =  input
             this.setState({selectedIndex:1})
         }else if(this.state.selectedIndex === 1){
-            var sentence = 'ぼく「' +  input + '」\n\n'
+            var sentence = input 
             this.setState({selectedIndex:0})
         }
-        const report = this.state.report + sentence
+        if(this.state.report.length === 0){
+            var id = 1
+        }else{
+            var id = this.state.report.length + 1
+        }
+        const report = this.state.report.concat(
+            {id:id,message:sentence, speaker:speaker}
+        )
         this.setState({report:report})
+        console.log(report)
         this.setState({sentence:""})
     }
 
@@ -160,7 +184,7 @@ export class AddCardScreen extends Component{
       }
 
     render(){
-        if (this.state.loading === true) { // ←追記部分
+        if (this.state.loading === true) {
             return <ActivityIndicator size="large" />;
           }
         return(
@@ -170,8 +194,20 @@ export class AddCardScreen extends Component{
                     <KeyboardAvoidingView style={styles.modalWrapper} behavior="padding" enabled>
                         <View style={styles.modalContainer}>
                             <View style={styles.reportContainer}>
-                                <ScrollView style={styles.reportBox}>
-                                    <Text>{this.state.report}</Text>
+                                <ScrollView style={styles.reportBox}                                >
+                                    <FlatList
+                                        // ref = "messageList"
+                                        // onContentSizeChange={()=> this.refs.messageList.scrollToEnd()}
+                                        data={this.state.report}
+                                        renderItem={({ item }) =>
+                                            <Item style={marginTop=10}
+                                                id={item.id}
+                                                message={item.message}
+                                                speaker={item.speaker}
+                                                messageDialog={this.messageDialog}
+                                            />}
+                                            keyExtractor={item => item.id.toString()}
+                                        />
                                 </ScrollView>
                                 <SegmentedControlIOS
                                     values={['アイドル', '自分']}
@@ -203,7 +239,7 @@ export class AddCardScreen extends Component{
                     <View style={styles.modalWrapper}>
                         <View style={styles.modalContainer}>
                         <View style={styles.imageBox}>
-                            <TouchableOpacity style={styles.deleteImageButton} onPress={this.deleteImage}>
+                            <TouchableOpacity style={styles.closeModalButton} onPress={this.closeImageModal}>
                                 <Ionicons name="ios-close-circle-outline" size={30}/>
                             </TouchableOpacity>
                             <Image 
@@ -261,27 +297,63 @@ export class AddCardScreen extends Component{
                 <Feather name="upload" size={40}/>
             </TouchableOpacity>
           </View>
-        
+    </View>
+        )
+    }
+}
+
+function Item({id,message,speaker,messageDialog}){
+    return(
+        renderMessage(id,message,speaker,messageDialog)
+    )
+}
+
+const renderMessage = (id,message,speaker,messageDialog)=>{
+    if(speaker===1){
+        return(
+            <View style={{flexDirection: 'row'}}>
+                <View style={styles.otakuCallout}>
+                    <TouchableOpacity onLongPress={() => messageDialog(id)}>
+                        <Text style={styles.otakuMessageText}
+                            multiline={true}>{message}</Text>
+                    </TouchableOpacity>
+                </View>
+                <Image 
+                    source = {{uri:userIconUrl}}
+                    style={styles.icon}
+                />
             </View>
         )
     }
-
+    if(speaker===0){
+        return(
+            <View style={{flexDirection: 'row'}}>
+                <Image 
+                    source = {{uri:idolIconUrl}}
+                    style={styles.icon}
+                />
+                <View style={styles.idolCallout}>
+                    <TouchableOpacity onLongPress={()=>messageDialog(id)}>
+                        <Text style={styles.idolMessageText}>{message}</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
+    }
 }
+
+
+const idolIconUrl = 'https://pbs.twimg.com/profile_images/1158609328758067200/xXcKfQxl_reasonably_small.jpg'
+const userIconUrl = 'https://pbs.twimg.com/profile_images/952202077777752065/pL4fKMwB_400x400.jpg'
 
 const getUserName = async() => {
     return await AsyncStorage.getItem('userName')
   }
 
 const styles = StyleSheet.create({
-    container:{
-      flex:1,
-      padding:20,
-    },
     modalWrapper:{
         alignItems:'center',
         justifyContent:'center',
-        height:hp('100%'),
-        width:wp('100%')
     },
     modalContainer:{
         height:hp('90%'),
@@ -309,7 +381,7 @@ const styles = StyleSheet.create({
     },
     reportBox:{  
       padding:10,
-      height:hp('55%'),
+      height:hp('60%'),
       padding:5,
       marginTop:30,
       marginBottom:30,
@@ -349,14 +421,46 @@ const styles = StyleSheet.create({
         borderRadius:10,
         borderColor: 'gray'
     },
-    deleteImageButton:{
-        marginTop:10,
+    closeModalButton:{
         backgroundColor:'#fff',
-        marginBottom:-5
     },
     imageBox:{
     },
     reportContainer:{
         width:wp('90%')
-    }
+    },
+    idolMessageText:{
+        color:'white',
+        fontSize:16
+    },otakuMessageText:{
+        color:'#2E9AFE',
+        fontSize:16
+    },
+    idolCallout:{
+        margin:5,
+        padding:5,
+        backgroundColor:'#2E9AFE',
+        borderWidth:1,
+        borderRadius:10,
+        width:'auto',
+        maxWidth:wp('45%'),
+        marginRight:'auto',
+    },
+    otakuCallout:{
+        margin:5,
+        padding:5,
+        backgroundColor:'white',
+        borderWidth:1,
+        borderRadius:10,
+        width:'auto',
+        maxWidth:wp('45%'),
+        marginLeft:'auto',
+    },
+    icon:{
+        width:30,
+        height:30,
+        marginTop:7,
+        borderColor:'black',
+        borderRadius:15, 
+      },
   });

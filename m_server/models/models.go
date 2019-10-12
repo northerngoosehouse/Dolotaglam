@@ -2,20 +2,19 @@ package models
 
 import (
 	"fmt"
-	"time"
 )
 
 type User struct {
-	Id   string `json:"id"`
+	Id   string `json:"-"`
 	Name string `json:"name"`
 }
 
 type Card struct {
-	Id        string    `json:"id"`
+	Id        string    `json:"-"`
 	UserId    string    `json:"user_id"`
 	ChekiUrl  string    `json:"cheki_url"`
-	EventDate time.Time `json:"event_date"`
-	CreatedAt time.Time `json:"created_at"`
+	EventDate string `json:"event_date"`
+	CreatedAt string `json:"created_at"`
 	Report    string    `json:"report"`
 }
 
@@ -49,10 +48,10 @@ func Map2CardStruct(data map[string]interface{}) (Card, error) {
 	if card.ChekiUrl, ok = data["cheki_url"].(string); ok {
 		return Card{}, fmt.Errorf("faild data['cheki_url'] to card struct")
 	}
-	if card.EventDate, ok = data["event_date"].(time.Time); ok {
+	if card.EventDate, ok = data["event_date"].(string); ok {
 		return Card{}, fmt.Errorf("faild data['id'] to card struct")
 	}
-	if card.CreatedAt, ok = data["created_at"].(time.Time); ok {
+	if card.CreatedAt, ok = data["created_at"].(string); ok {
 		return Card{}, fmt.Errorf("faild data['created_at'] to card struct")
 	}
 	if card.Report, ok = data["report"].(string); ok {

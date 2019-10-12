@@ -1,54 +1,58 @@
 package dao
 
 import (
+	"go.mercari.io/datastore"
+	"go.mercari.io/datastore/clouddatastore"
 	"m_server/models"
-	"cloud.google.com/go/firestore"
 	"context"
-	firebase "firebase.google.com/go"
 	"log"
+	cdatastore "cloud.google.com/go/datastore"
+	"strconv"
 )
 
 type UserDao struct {
 	Ctx    context.Context
-	Client *firestore.Client
+	Client datastore.Client
 }
 
 func NewUserDao() (*UserDao, error) {
-	userDao := new(UserDao)
-
 	ctx := context.Background()
-	conf := &firebase.Config{ProjectID: "todo-management-line-bot"}
-	app, err := firebase.NewApp(ctx, conf)
+
+	dsClient, err := cdatastore.NewClient(ctx, "dolotagram-254717")
 	if err != nil {
-		log.Printf("%s", err.Error())
-		return &UserDao{}, err
+		log.Printf("[fail] failed create cloud datastore client")
+		return nil, err
 	}
 
-	client, err := app.Firestore(ctx)
+	client, err := clouddatastore.FromClient(ctx, dsClient)
 	if err != nil {
-		log.Printf("%s", err.Error())
-		return &UserDao{}, nil
+		log.Printf("[fail] failed create client for cloud datastore")
+		return nil, err
 	}
-	// defer client.Close()
 
+	var userDao UserDao
 	userDao.Ctx = ctx
 	userDao.Client = client
 
-	return userDao, nil
+	return &userDao, nil
 }
 
 
 func (dao *UserDao) Get(userId string) (models.User, error) {
-	userRef, err := dao.Client.Collection("user").Doc(userId).Get(dao.Ctx)
+	log.Printf("[start] start get user")
+	defer log.Printf("[end] end get user")
+	id, err := strconv.ParseInt(userId, 10, 64)
 	if err != nil {
-		return models.User{}, err
+		log.Printf("[fail] failed parse stringId to int64 Id : %s", err.Error())
 	}
-	rowUser := userRef.Data()
-	log.Printf("Document data: %#v\n", rowUser)
+	key := dao.Client.IDKey("user", id,nil)
 
-	user, err := models.Map2UserStruct(rowUser)
-	if err != nil {
+	var user models.User
+	if err := dao.Client.Get(dao.Ctx, key, &user); err != nil {
+		log.Printf("[fail] failed get user from datastore : %s", err.Error())
 		return models.User{}, err
 	}
+	user.Id = userId
+
 	return user, nil
 }

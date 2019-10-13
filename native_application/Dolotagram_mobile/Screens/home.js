@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { StyleSheet, View, Text, SafeAreaView ,Image,TouchableOpacity,FlatList} from 'react-native'
+import { StyleSheet, View, Text, SafeAreaView ,Image,TouchableOpacity,FlatList,RefreshControl} from 'react-native'
 import { Card } from 'react-native-elements'
 import { AsyncStorage } from "react-native"
 
@@ -9,9 +9,11 @@ export class HomeScreen extends Component {
     this.getUserName = this.getUserName.bind(this);
     this.getCard = this.getCard.bind(this);
     this.initialList = this.initialList.bind(this);
+    this.onRefresh = this.onRefresh.bind(this);
     this.state={
         serName:"",
-        cardListJSON:[]
+        cardListJSON:[],
+        refreshing:false
         }
     this.initialList()
   }
@@ -23,6 +25,15 @@ export class HomeScreen extends Component {
   initialList = async() => {
     await this.getUserName()
     await this.getCard(this.state.userName)
+  }
+
+  onRefresh = async() => {
+    console.log('onRefresh')
+    this.setState({refreshing:true})
+    await this.getCard(this.state.userName)
+    .then(()=>{
+      this.setState({refreshing:false})
+  });
   }
 
   getUserName = async() => {
@@ -50,8 +61,6 @@ export class HomeScreen extends Component {
       }).then(response => {
           return response.json();
         }).then(jsonData => {
-          console.log('jsonData:', jsonData); 
-          console.log('cards:' + jsonData.result.cards)
           this.setState({cardListJSON:jsonData.result.cards})
           this.setState({loading:false})
       }).catch(error => {
@@ -64,7 +73,10 @@ export class HomeScreen extends Component {
     return (
       <SafeAreaView>
       <FlatList
-        data={this.state.cardListJSON}
+        data={this.state.cardListJSON.reverse()}
+        refreshControl={
+          <RefreshControl refreshing={this.state.refreshing} onRefresh={()=>this.onRefresh()} />
+        }
         renderItem={({ item }) => 
           <Item 
             user_id={item.user_id}

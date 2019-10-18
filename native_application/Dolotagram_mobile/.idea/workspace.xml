@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="53d52197-688e-48a7-a36a-4e6803cfcf29" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Screens/addReportInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/addReportInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/UserScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/UserScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/addCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/addCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Screens/welcomeUserInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/Screens/welcomeUserInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,7 +29,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="456" />
     <option name="width" value="1473" />
     <option name="height" value="1029" />
@@ -34,6 +40,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -46,7 +53,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -127,7 +133,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
+    <frame x="-7" y="-7" width="1295" height="695" extended-state="7" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
       <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.3298887" />

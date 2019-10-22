@@ -7,9 +7,12 @@ import (
 
 type User struct {
 	Name string `json:"name"`
+	MailAddress string `json:"mail_address"`
+	TopImageUrl string `json:"top_image_url"`
 }
 
 type Card struct {
+	Id        string    `json:"id"`
 	UserId    string    `json:"user_id"`
 	ChekiUrl  string    `json:"cheki_url"`
 	EventDate time.Time `json:"event_date"`
